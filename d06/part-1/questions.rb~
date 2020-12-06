@@ -1,0 +1,3 @@
+answers = File.read('answers.txt').split("\n\n")
+
+p answers
