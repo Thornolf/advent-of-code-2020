@@ -1,4 +1,3 @@
-require 'pry'
 require 'ostruct'
 
 conveyor_belt = File.read('bags.txt').split("\n")
@@ -18,14 +17,14 @@ end
 
 def valid_bag_finder(searched_bag, main_bag)
   @valid_bags << main_bag.select { |bag| bag.bags.include?(searched_bag) }
+
+  @valid_bags = @valid_bags.flatten.uniq
 end
 
-loop do
-  @bags.each do |bags|
-    @valid_bags.uniq.flatten.each do |bag|
-      valid_bag_finder(bag.master_bag, @bags)
-    end
-
-    p @valid_bags.flatten.uniq.count
+@bags.each do |bags|
+  @valid_bags.uniq.flatten.each do |bag|
+    valid_bag_finder(bag.master_bag, @bags)
   end
+
+  p @valid_bags.count
 end
