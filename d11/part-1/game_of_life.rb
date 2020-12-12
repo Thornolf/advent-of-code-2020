@@ -1,4 +1,3 @@
-require 'pry'
 require 'ostruct'
 
 inputs = File.read('inputs.txt').split("\n")
@@ -79,50 +78,22 @@ end
 
 tmp_room = Marshal.load(Marshal.dump(initial_room))
 
-initial_room.each_with_index do |row, y|
-  row.each_with_index do |seat, x|
-    if seat.type == :seat && four_or_more_adjacent_seat_occupied?(retrieve_adjacent_seats(seat, initial_room))
-      tmp_room[y][x].occupied = false
-    elsif seat.type == :seat && not_any_adjacent_seat_occupied?(retrieve_adjacent_seats(seat, initial_room))
-      tmp_room[y][x].occupied = true
+loop do
+  initial_room = Marshal.load(Marshal.dump(tmp_room))
+
+  initial_room.each_with_index do |row, y|
+    row.each_with_index do |seat, x|
+      if seat.type == :seat && four_or_more_adjacent_seat_occupied?(retrieve_adjacent_seats(seat, initial_room))
+        tmp_room[y][x].occupied = false
+      elsif seat.type == :seat && not_any_adjacent_seat_occupied?(retrieve_adjacent_seats(seat, initial_room))
+        tmp_room[y][x].occupied = true
+      end
     end
   end
+
+  p '|-------------------------|'
+  draw(initial_room)
+  p '|-------------------------|'
+  p "Occupied seats : #{tmp_room.flatten.count { |seat| seat&.occupied }}"
+  sleep(1)
 end
-
-draw(initial_room)
-
-p '--- --- --- --- --- --- ---'
-
-initial_room = Marshal.load(Marshal.dump(tmp_room))
-
-initial_room.each_with_index do |row, y|
-  row.each_with_index do |seat, x|
-    binding.pry if y > 0
-    if seat.type == :seat && four_or_more_adjacent_seat_occupied?(retrieve_adjacent_seats(seat, initial_room))
-      tmp_room[y][x].occupied = false
-    elsif seat.type == :seat && not_any_adjacent_seat_occupied?(retrieve_adjacent_seats(seat, initial_room))
-      tmp_room[y][x].occupied = true
-    end
-  end
-end
-
-draw(initial_room)
-
-p '--- --- --- --- --- --- ---'
-
-
-initial_room = Marshal.load(Marshal.dump(tmp_room))
-
-initial_room.each_with_index do |row, y|
-  row.each_with_index do |seat, x|
-    if seat.type == :seat && four_or_more_adjacent_seat_occupied?(retrieve_adjacent_seats(seat, initial_room))
-      tmp_room[y][x].occupied = false
-    elsif seat.type == :seat && not_any_adjacent_seat_occupied?(retrieve_adjacent_seats(seat, initial_room))
-      tmp_room[y][x].occupied = true
-    end
-  end
-end
-
-
-draw(initial_room)
-
